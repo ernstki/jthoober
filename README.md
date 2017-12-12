@@ -1,40 +1,46 @@
-# jthoober
+# jtlabber
 
-A service to receive github webhook events & run scripts in response. Run custom testing or deploys in response to pushes! Build things!
-
-[![on npm](https://img.shields.io/npm/v/jthoober.svg?style=flat)](https://www.npmjs.org/package/jthoober)  [![Tests](https://img.shields.io/travis/ceejbot/jthoober.svg?style=flat)](http://travis-ci.org/ceejbot/jthoober)  [![Coverage](https://img.shields.io/coveralls/ceejbot/jthoober.svg?style=flat)](https://coveralls.io/github/ceejbot/jthoober?branch=master) [![Dependencies](https://img.shields.io/david/ceejbot/jthoober.svg?style=flat)](https://david-dm.org/ceejbot/jthoober)
+A service to receive GitLab webhook events & run scripts in response. Run
+custom testing or deploys in response to pushes! Build things!
 
 ## Usage
 
-`npm install --save jthoober`
+`npm install --save jtlabber`
 
-Set up jthoober somewhere that github has access to. Create a shared secret for github to send to the webhook & make a note of it. Run jthoober like this:
+Set up jtlabber somewhere that your GitLab site has access to. Create a shared
+secret for GitLab to send to the webhook & make a note of it. Run jtlabber like
+this:
 
 ```shell
-Usage: jthoober --rules path/to/rules.js --secret sooper-sekrit
+Usage: jtlabber --rules path/to/rules.js --secret sooper-sekrit
 
 Options:
   --rules, -r  path to the rules file                         [required]
-  --secret     shared secret with github                      [required]
+  --secret     shared secret with GitLab                      [required]
   -p, --port   port to listen on                              [default: 5757]
   -h, --host   host to bind to                                [default: "localhost"]
   --mount      path to mount routes on                        [default: "/webhook"]
   --help       Show help
 ```
 
-I like to use nginx to terminate tls then proxy pass through to jthoober. I run it under upstart.
+I like to use nginx to terminate TLS then proxy pass through to jtlabber. I run
+it under upstart.
 
-Set up a webhook for a project on github. Point it to your jthoober location & give it the secret string you created earlier. Observe that the test payload makes it through.
+Set up a webhook for a project on GitLab. Point it to your jtlabber location &
+give it the secret string you created earlier. Observe that the test payload
+makes it through.
 
 ### Rules
 
-The rules file must export an array of hashes; each hash is passed to the Rule constructor to make an object. Set up rules that match repos to scripts to execute when jthoober receives an event. Here are some examples:
+The rules file must export an array of hashes; each hash is passed to the Rule
+constructor to make an object. Set up rules that match repos to scripts to
+execute when jtlabber receives an event. Here are some examples:
 
 ```javascript
 module.exports =
 [
     {
-      pattern: /jthoober/,
+      pattern: /jtlabber/,
       event: '*',
       script: '/usr/local/bin/fortune'
     },
@@ -81,42 +87,59 @@ Rules may either invoke a script file or call a javascript function.
 
 A javascript function will be passed the event object & a callback to fire when complete.
 
-If you set the `fullEvent` boolean option to true, a script rule will be passed the entire JSON webhook event, stringified, in the WEBHOOK_EVENT environment variable.
+If you set the `fullEvent` boolean option to true, a script rule will be passed
+the entire JSON webhook event, stringified, in the WEBHOOK_EVENT environment
+variable.
 
-Otherwise, all script rules receive the repo name as the first script argument & the ref of the commit (aka the branch) as the second. If the event is a *push* event, the third argument is the `after` payload field, aka the hash of the head commit. If you are passing the event to a javascript function instead of invoking an external script, you are given have the whole event to play with.
+Otherwise, all script rules receive the repo name as the first script argument &
+the ref of the commit (aka the branch) as the second. If the event is a *push*
+event, the third argument is the `after` payload field, aka the hash of the head
+commit. If you are passing the event to a javascript function instead of
+invoking an external script, you are given have the whole event to play with.
 
 Valid rules options:
 
 * `pattern`: required; regexp to match against the repo name
 * `branchPattern`: regexp to match against the branch name.
-* `event`: required; github event to match on; `*` matches all events
+* `event`: required; GitLab event to match on; `*` matches all events
 * `func`: javascript function to invoke on match; mutually exclusive with `script`
 * `script`: external executable to invoke on match
 * `cmd`: the executable to run the script with; unused for functions. e.g. `bash`
-* `args`: an array of additional args to pass to the script or function. These args come after the repo and branch names, at the end of args passed. If `func` is passed, these args will come after the event name.
+* `args`: an array of additional args to pass to the script or function. These
+  args come after the repo and branch names, at the end of args passed. If
+  `func` is passed, these args will come after the event name.
 * `fullEvent`: a boolean, considered only for script rules.
-* `concurrentOkay`: boolean; set to true if a rule should be allowed to be run concurrently with itself
+* `concurrentOkay`: boolean; set to true if a rule should be allowed to be run
+  concurrently with itself
 
 ## Endpoints
 
-`/webhook` - route that responds to the webhook. Configurable; pass `--mount /foo` to the runner to mount the handler on `/foo` instead.
+`/webhook` - route that responds to the webhook. Configurable; pass `--mount
+/foo` to the runner to mount the handler on `/foo` instead.
 
 `/ping` - responds with `200 "OK"`. Use this to monitor.
 
 ## Logging
 
-The server logs events & status in json to stdout. Pipe the output through `bistre --time` to get pretty logs.
+The server logs events & status in JSON to stdout. Pipe the output through
+`bistre --time` to get pretty logs.
 
 ## Notes
 
-`j'thoob` is the official pronunciation of `gi-thub`, aka the site this code is hosted on.
+[`j'thoob`][jthoober] is [ceejbot][]'s official pronunciation of `gi-thub`, and
+so `jtlabber` inherits this pronunciation from its parent project.
 
 ## TODO
 
-Pass more stuff from the hook event to the bash script. Commit hash? Why not allow rules to be arbitrary node code? Or just define a handler API? But bash is so handy.
+Pass more stuff from the hook event to the Bash script. Commit hash? Why not
+allow rules to be arbitrary node code? Or just define a handler API? But Bash is
+so handy.
 
-Logging for js functions?
+Logging for JS functions?
 
 ## License
 
 ISC; see the LICENSE file.
+
+[ceejbot]: https://github.com/ceejbot
+[jthoober]: https://github.com/ceejbot/jthoober

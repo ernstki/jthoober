@@ -3,14 +3,14 @@
 'use strict';
 
 const bole     = require('bole');
-const jthoober = require('../index');
+const jtlabber = require('../index');
 const path     = require('path');
 const argv     = require('yargs')
-	.usage('Usage: jthoober --rules path/to/rules.js --secret sooper-sekrit')
+	.usage('Usage: jtlabber --rules path/to/rules.js --secret sooper-sekrit')
 	.alias('rules', 'r')
 	.describe('rules', 'path to the rules file')
 	.demand('rules')
-	.describe('secret', 'shared secret with github')
+	.describe('secret', 'shared secret with GitLab')
 	.demand('secret')
 	.alias('p', 'port')
 	.describe('p', 'port to listen on')
@@ -37,19 +37,19 @@ else
 	outputs.push({ level: 'info', stream: process.stdout });
 bole.output(outputs);
 
-// resolve ./ to the current working directory executing jthoober.
+// resolve ./ to the current working directory executing jtlabber.
 const rulesModule = argv.rules.match(/^.\//) ? path.resolve(process.cwd(), argv.rules) : argv.rules;
 const ruleInput = require(rulesModule);
 const rules = [];
 ruleInput.forEach(data =>
 {
-	const r = new jthoober.Rule(data);
+	const r = new jtlabber.Rule(data);
 	rules.push(r);
 	logger.info(`loaded ${r.name}`);
 });
 
 const opts = {
-	name: 'jthoober',
+	name: 'jtlabber',
 	port: process.env.PORT || argv.port,
 	host: process.env.HOST || argv.host,
 	rules: rules,
@@ -57,7 +57,7 @@ const opts = {
 	secret: argv.secret
 };
 
-const server = new jthoober.Server(opts);
+const server = new jtlabber.Server(opts);
 server.listen(opts.port, opts.host, err =>
 {
 	if (err)
@@ -66,5 +66,5 @@ server.listen(opts.port, opts.host, err =>
 		process.exit(1);
 	}
 
-	logger.info(`jthoober listening on ${server.server.address().address}:${server.server.address().port}`);
+	logger.info(`jtlabber listening on ${server.server.address().address}:${server.server.address().port}`);
 });

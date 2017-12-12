@@ -1,5 +1,5 @@
 module.exports =
 {
-	Server: require('./lib/jthoober'),
+	Server: require('./lib/jtlabber'),
 	Rule: require('./lib/rule'),
 };

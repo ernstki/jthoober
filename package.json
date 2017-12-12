@@ -1,19 +1,26 @@
 {
-  "name": "jthoober",
-  "description": "run bash scripts when you get a push event from a github webhook",
+  "name": "jtlabber",
+  "description": "run Bash scripts when you get a push event from a GitLab webhook",
   "version": "4.0.0",
   "author": "C J Silverio <ceejceej@gmail.com>",
+  "contributors": [
+    {
+      "name": "Kevin Ernst",
+      "email": "ernstki@mail.uc.edu",
+      "url": "https://twitter.com/ernstki"
+    }
+  ],
   "bin": {
-    "jthoober": "bin/jthoober.js"
+    "jtlabber": "bin/jtlabber.js"
   },
   "bugs": {
-    "url": "https://github.com/ceejbot/jthoober/issues"
+    "url": "https://github.com/ernstki/jtlabber/issues"
   },
   "dependencies": {
     "bistre": "~1.0.1",
+    "bl": "^1.2.1",
     "bole": "~3.0.2",
     "dotenv": "~4.0.0",
-    "github-webhook-handler": "~0.6.0",
     "restify": "~5.0.1",
     "through2": "~2.0.3",
     "yargs": "~9.0.1"
@@ -28,17 +35,17 @@
     "sinon": "~3.3.0",
     "xo": "~0.18.2"
   },
-  "homepage": "https://github.com/ceejbot/jthoober",
+  "homepage": "https://github.com/ernstki/jtlabber",
   "keywords": [
     "deploy",
-    "github",
+    "gitlab",
     "webhook"
   ],
   "license": "ISC",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ceejbot/jthoober.git"
+    "url": "https://github.com/ernstki/jtlabber.git"
   },
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
