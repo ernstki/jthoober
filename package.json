@@ -8,6 +8,14 @@
       "name": "Kevin Ernst",
       "email": "ernstki@mail.uc.edu",
       "url": "https://twitter.com/ernstki"
+    },
+    { "name": "Eric Xu",
+      "email": "caviler@gmail.com",
+      "url": "https://github.com/caviler/gitlab-webhook-handler"
+    },
+    { "name": "Rod Vagg",
+      "email": "r@va.gg",
+      "url": "https://github.com/rvagg/github-webhook-handler.git"
     }
   ],
   "bin": {
